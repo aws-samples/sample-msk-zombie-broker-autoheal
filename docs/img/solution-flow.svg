@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="b" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z" fill="#2997ff"/></marker>
+    <marker id="g" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z" fill="#30d158"/></marker>
+    <marker id="d" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z" fill="#8b95a7"/></marker>
+  </defs>
+  <rect width="960" height="720" rx="14" fill="#0f1622"/>
+  <text x="40" y="46" fill="#f5f5f7" font-size="24" font-weight="700">msk-zombie-broker-autoheal — detect by symptom, recover by reboot</text>
+  <text x="40" y="74" fill="#8b95a7" font-size="14">One small Lambda runs every minute, scans every broker, and reboots a confirmed zombie within guardrails</text>
+
+  <!-- schedule -> lambda -->
+  <rect x="48" y="104" width="236" height="60" rx="10" fill="#1e2a3d" stroke="#ff9900" stroke-width="1.6"/>
+  <text x="166" y="130" fill="#fbbf24" font-size="14" font-weight="700" text-anchor="middle">EventBridge</text>
+  <text x="166" y="150" fill="#d7dde7" font-size="13" text-anchor="middle">schedule · rate(1 minute)</text>
+  <line x1="284" y1="134" x2="356" y2="134" stroke="#8b95a7" stroke-width="2" marker-end="url(#d)"/>
+
+  <rect x="358" y="100" width="300" height="68" rx="10" fill="#10233b" stroke="#2997ff" stroke-width="1.8"/>
+  <text x="508" y="127" fill="#7dd3fc" font-size="15" font-weight="700" text-anchor="middle">Lambda · scan all brokers</text>
+  <text x="508" y="150" fill="#d7dde7" font-size="12.5" text-anchor="middle">broker-count-agnostic (reads NumberOfBrokerNodes)</text>
+
+  <!-- cloudwatch feeds lambda -->
+  <rect x="712" y="104" width="200" height="60" rx="10" fill="#1e2a3d" stroke="#2997ff" stroke-width="1.4"/>
+  <text x="812" y="128" fill="#7dd3fc" font-size="13" font-weight="700" text-anchor="middle">CloudWatch AWS/Kafka</text>
+  <text x="812" y="148" fill="#8b95a7" font-size="11.5" text-anchor="middle">per-broker metrics</text>
+  <line x1="712" y1="134" x2="660" y2="134" stroke="#2997ff" stroke-width="2" marker-end="url(#b)"/>
+  <rect x="600" y="170" width="232" height="20" rx="4" fill="#0f1622"/>
+  <text x="716" y="185" fill="#7dd3fc" font-size="11.5" text-anchor="middle">BytesInPerSec + UnderReplicatedPartitions</text>
+
+  <line x1="508" y1="168" x2="508" y2="200" stroke="#8b95a7" stroke-width="2" marker-end="url(#d)"/>
+
+  <!-- decision diamond -->
+  <polygon points="508,202 648,260 508,318 368,260" fill="#1e2a3d" stroke="#fbbf24" stroke-width="1.8"/>
+  <text x="508" y="250" fill="#fbbf24" font-size="13" font-weight="700" text-anchor="middle">a broker with</text>
+  <text x="508" y="268" fill="#f5f5f7" font-size="12.5" text-anchor="middle">BytesIn = 0  AND</text>
+  <text x="508" y="285" fill="#f5f5f7" font-size="12.5" text-anchor="middle">cluster under-replicated?</text>
+
+  <!-- No branch -->
+  <line x1="368" y1="260" x2="250" y2="260" stroke="#8b95a7" stroke-width="2" marker-end="url(#d)"/>
+  <rect x="318" y="234" width="20" height="18" rx="3" fill="#0f1622"/>
+  <text x="328" y="248" fill="#8b95a7" font-size="12" text-anchor="middle">No</text>
+  <rect x="48" y="232" width="202" height="56" rx="10" fill="#13202e" stroke="#30d158" stroke-width="1.4"/>
+  <text x="149" y="256" fill="#86efac" font-size="13" font-weight="700" text-anchor="middle">action: none</text>
+  <text x="149" y="276" fill="#8b95a7" font-size="11.5" text-anchor="middle">healthy → zero false positive</text>
+
+  <!-- Yes branch down -->
+  <line x1="508" y1="318" x2="508" y2="350" stroke="#8b95a7" stroke-width="2" marker-end="url(#d)"/>
+  <rect x="498" y="322" width="26" height="18" rx="3" fill="#0f1622"/>
+  <text x="511" y="336" fill="#8b95a7" font-size="12" text-anchor="middle">Yes</text>
+
+  <!-- guardrails -->
+  <rect x="250" y="352" width="516" height="104" rx="12" fill="#1e2a3d" stroke="#fbbf24" stroke-width="1.6"/>
+  <text x="508" y="378" fill="#fbbf24" font-size="14" font-weight="700" text-anchor="middle">Guardrails (always on)</text>
+  <text x="508" y="402" fill="#d7dde7" font-size="12.5" text-anchor="middle">one broker at a time · cooldown · daily cap</text>
+  <text x="508" y="422" fill="#d7dde7" font-size="12.5" text-anchor="middle">reboot ineffective → escalate node replacement (Sev-2)</text>
+  <text x="508" y="442" fill="#d7dde7" font-size="12.5" text-anchor="middle">2+ zombies at once → suspected region event → page a human</text>
+  <line x1="508" y1="456" x2="508" y2="486" stroke="#8b95a7" stroke-width="2" marker-end="url(#d)"/>
+
+  <!-- reboot -->
+  <rect x="328" y="488" width="360" height="56" rx="10" fill="#231233" stroke="#bf5af2" stroke-width="1.8"/>
+  <text x="508" y="513" fill="#d8b4fe" font-size="15" font-weight="700" text-anchor="middle">kafka:RebootBroker</text>
+  <text x="508" y="533" fill="#8b95a7" font-size="12" text-anchor="middle">the one client-side API that can break the deadlock</text>
+  <line x1="508" y1="544" x2="508" y2="574" stroke="#30d158" stroke-width="2" marker-end="url(#g)"/>
+
+  <!-- recovery chain -->
+  <rect x="120" y="576" width="776" height="72" rx="12" fill="#10261a" stroke="#30d158" stroke-width="2"/>
+  <text x="508" y="604" fill="#86efac" font-size="15" font-weight="700" text-anchor="middle">reboot drops the ZK session  →  controller fences the broker  →  new leader elected</text>
+  <text x="508" y="628" fill="#bbf7d0" font-size="15" font-weight="700" text-anchor="middle">→  SERVICE RECOVERED</text>
+
+  <text x="40" y="688" fill="#8b95a7" font-size="12">Pure client-side · no cluster migration · one command to deploy · validated end-to-end on a live MSK cluster</text>
+</svg>

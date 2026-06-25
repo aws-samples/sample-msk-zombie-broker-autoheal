@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Unit + regression tests (no AWS, no boto3 needed)
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+
+      - name: ARN parser test
+        run: bash tests/test_arn_parse.sh
+
+      - name: Shell syntax check
+        run: |
+          bash -n deploy.sh
+          bash -n tests/e2e_live.sh
+          bash -n l0-client-hardening/audit-topics.sh
+          bash -n lib/parse_msk_arn.sh
+
+      - name: Lambda compiles
+        run: python3 -m py_compile selfheal_lambda.py
+
+      - name: Lint SAM template (cfn-lint)
+        run: |
+          pip install --quiet cfn-lint
+          cfn-lint template.yaml

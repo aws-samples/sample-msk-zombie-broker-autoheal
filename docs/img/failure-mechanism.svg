@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" font-family="'Segoe UI',system-ui,Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z" fill="#8b95a7"/></marker>
+    <marker id="arR" markerWidth="10" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0,0 L9,3.5 L0,7 Z" fill="#ff453a"/></marker>
+  </defs>
+  <rect width="960" height="720" rx="14" fill="#0f1622"/>
+  <text x="40" y="46" fill="#f5f5f7" font-size="24" font-weight="700">How an app-log volume stall becomes an invisible "zombie broker" outage</text>
+  <text x="40" y="74" fill="#8b95a7" font-size="14">Amazon MSK · ZooKeeper mode — the failure stays green on every health check, yet the broker serves nothing</text>
+
+  <!-- 1 trigger -->
+  <rect x="230" y="100" width="500" height="58" rx="10" fill="#1e2a3d" stroke="#ff9900" stroke-width="1.6"/>
+  <text x="480" y="126" fill="#fbbf24" font-size="15" font-weight="700" text-anchor="middle">1 · Trigger</text>
+  <text x="480" y="147" fill="#d7dde7" font-size="13" text-anchor="middle">One broker's application-log EBS volume stalls (disk I/O hangs)</text>
+  <line x1="480" y1="158" x2="480" y2="186" stroke="#8b95a7" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- 2 zombie -->
+  <rect x="150" y="190" width="660" height="128" rx="12" fill="#2a1418" stroke="#ff453a" stroke-width="2"/>
+  <text x="480" y="218" fill="#ff453a" font-size="17" font-weight="700" text-anchor="middle">2 · Zombie broker — alive, but doing no work</text>
+  <g font-size="12.5" text-anchor="middle">
+    <rect x="180" y="234" width="140" height="62" rx="8" fill="#13202e" stroke="#1e2a3d"/>
+    <text x="250" y="258" fill="#30d158" font-weight="700" font-size="14">active</text>
+    <text x="250" y="278" fill="#8b95a7">process</text>
+    <rect x="336" y="234" width="140" height="62" rx="8" fill="#13202e" stroke="#1e2a3d"/>
+    <text x="406" y="258" fill="#30d158" font-weight="700" font-size="14">LISTENING</text>
+    <text x="406" y="278" fill="#8b95a7">port 9092</text>
+    <rect x="492" y="234" width="140" height="62" rx="8" fill="#13202e" stroke="#1e2a3d"/>
+    <text x="562" y="258" fill="#30d158" font-weight="700" font-size="14">alive</text>
+    <text x="562" y="278" fill="#8b95a7">ZK session</text>
+    <rect x="648" y="234" width="140" height="62" rx="8" fill="#13202e" stroke="#ff453a"/>
+    <text x="718" y="258" fill="#ff453a" font-weight="700" font-size="14">FAIL</text>
+    <text x="718" y="278" fill="#8b95a7">produce / fetch</text>
+  </g>
+
+  <line x1="330" y1="318" x2="250" y2="372" stroke="#ff453a" stroke-width="1.8" marker-end="url(#arR)"/>
+  <line x1="630" y1="318" x2="710" y2="372" stroke="#ff453a" stroke-width="1.8" marker-end="url(#arR)"/>
+
+  <!-- defect A -->
+  <rect x="50" y="376" width="410" height="150" rx="12" fill="#1e2a3d" stroke="#fbbf24" stroke-width="1.6"/>
+  <text x="70" y="404" fill="#fbbf24" font-size="15" font-weight="700">Defect A · AWS monitoring blind spot</text>
+  <text x="70" y="430" fill="#d7dde7" font-size="13">Managed monitoring / auto-heal watches the</text>
+  <text x="70" y="450" fill="#d7dde7" font-size="13"><tspan font-weight="700">data</tspan> volume and discards the <tspan font-weight="700">app-log</tspan> volume.</text>
+  <text x="70" y="478" fill="#ff8a80" font-size="13">→ no alarm fires, no auto-recovery</text>
+  <text x="70" y="504" fill="#8b95a7" font-size="12">the fault is invisible</text>
+
+  <!-- defect B -->
+  <rect x="500" y="376" width="410" height="150" rx="12" fill="#1e2a3d" stroke="#bf5af2" stroke-width="1.6"/>
+  <text x="520" y="404" fill="#d8b4fe" font-size="15" font-weight="700">Defect B · ZooKeeper won't fence it</text>
+  <text x="520" y="430" fill="#d7dde7" font-size="13">Liveness = ZK session only; its heartbeat is</text>
+  <text x="520" y="450" fill="#d7dde7" font-size="13">memory + network, <tspan font-weight="700">not disk</tspan>. Session stays up.</text>
+  <text x="520" y="478" fill="#ff8a80" font-size="13">→ controller never fences, never re-elects</text>
+  <text x="520" y="504" fill="#8b95a7" font-size="12">the fault never self-heals</text>
+
+  <line x1="255" y1="526" x2="380" y2="566" stroke="#8b95a7" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="705" y1="526" x2="580" y2="566" stroke="#8b95a7" stroke-width="2" marker-end="url(#ar)"/>
+
+  <!-- result -->
+  <rect x="180" y="570" width="600" height="64" rx="12" fill="#3b0d0d" stroke="#ff453a" stroke-width="2"/>
+  <text x="480" y="598" fill="#fecaca" font-size="16" font-weight="700" text-anchor="middle">Result: an invisible, partial outage that can last hours</text>
+  <text x="480" y="620" fill="#fca5a5" font-size="13" text-anchor="middle">every dashboard stays green while trades / quotes / ledger time out</text>
+
+  <text x="480" y="666" fill="#8b95a7" font-size="12.5" text-anchor="middle">Naive checks — systemctl is-active · TCP 9092 · ZK /brokers/ids — all stay GREEN, so they are blind to this.</text>
+</svg>

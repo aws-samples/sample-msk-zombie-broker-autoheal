@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Build / packaging
+*.zip
+.aws-sam/
+fn.zip
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# local scratch
+*.log
+tmp/
