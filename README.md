@@ -159,6 +159,9 @@ Guardrail logic is covered by **9 offline unit tests** (`python3 -m unittest dis
 
 ## What it creates
 
+![AWS architecture: an EventBridge Scheduler invokes the self-heal Lambda every 5 minutes; the Lambda reads MSK metrics from CloudWatch (BytesInPerSec + per-broker UnderReplicatedPartitions), and on a detected zombie issues kafka:RebootBroker to the MSK cluster, records cooldown state in DynamoDB, and alerts via SNS.](docs/img/architecture-aws.png)
+
+
 | Resource | Name (default prefix `msk-autoheal`) | Purpose |
 |---|---|---|
 | Lambda | `msk-autoheal-fn` | the scanner / healer (`selfheal_lambda.py`, python3.12) |

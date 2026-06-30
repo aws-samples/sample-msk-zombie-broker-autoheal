@@ -1,5 +1,10 @@
 # Architecture & design notes
 
+![AWS architecture](img/architecture-aws.png)
+
+*Diagram source: [`architecture_diagram.py`](architecture_diagram.py) (rendered with the `diagrams` library + Graphviz).*
+
+
 ## The three layers of the failure
 
 | Layer | Defect | Effect |
