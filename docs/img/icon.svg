@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MSK zombie broker auto-heal logo">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a3d62"/>
+      <stop offset="100%" stop-color="#1b8a9e"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <!-- reboot ring (the RebootBroker action) -->
+  <path d="M303.88,124.44 A140,140 0 1 1 208.12,124.44" fill="none" stroke="#ffffff" stroke-width="26" stroke-linecap="round" opacity="0.95"/>
+  <!-- reboot arrowhead at the gap -->
+  <path d="M286,90 L332,120 L292,150 Z" fill="#ffffff" opacity="0.95"/>
+  <!-- heartbeat / revival pulse (the broker coming back to life) -->
+  <polyline points="150,258 198,258 218,224 240,304 260,184 282,258 362,258" fill="none" stroke="#30d158" stroke-width="16" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- 3-broker cluster: one healed (green), two healthy (white) -->
+  <circle cx="216" cy="334" r="13" fill="#ffffff" opacity="0.55"/>
+  <circle cx="256" cy="334" r="13" fill="#30d158"/>
+  <circle cx="296" cy="334" r="13" fill="#ffffff" opacity="0.55"/>
+</svg>

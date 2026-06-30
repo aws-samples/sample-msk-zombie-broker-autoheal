@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/img/icon.png" width="128" height="128" alt="MSK 僵尸 broker 自愈 logo"/>
+</p>
+
 # msk-zombie-broker-autoheal
 
 **[← English](README.md) · 中文说明**
