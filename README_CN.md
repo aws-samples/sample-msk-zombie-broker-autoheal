@@ -5,7 +5,7 @@
 > **一条命令,自动发现并恢复 Amazon MSK(ZooKeeper 模式)上的"僵尸 broker"。**
 > 补上 app-log 卷的监控盲区——别让单个卡死的 broker 演变成长达数小时、且**看不见**的停摆。
 
-[![ci](https://github.com/neosun100/msk-zombie-broker-autoheal/actions/workflows/ci.yml/badge.svg)](https://github.com/neosun100/msk-zombie-broker-autoheal/actions/workflows/ci.yml) [![tests](https://img.shields.io/badge/unit%2Bregression-15%2F15%20passing-brightgreen)]() [![validated](https://img.shields.io/badge/validated-live%20Amazon%20MSK%20%E2%9C%93-blue)](docs/POC-REPORT.md) [![cfn-lint](https://img.shields.io/badge/cfn--lint-clean-green)]() [![license](https://img.shields.io/badge/license-MIT--0-blue)]()
+[![ci](https://github.com/aws-samples/sample-msk-zombie-broker-autoheal/actions/workflows/ci.yml/badge.svg)](https://github.com/aws-samples/sample-msk-zombie-broker-autoheal/actions/workflows/ci.yml) [![tests](https://img.shields.io/badge/unit%2Bregression-15%2F15%20passing-brightgreen)]() [![validated](https://img.shields.io/badge/validated-live%20Amazon%20MSK%20%E2%9C%93-blue)](docs/POC-REPORT.md) [![cfn-lint](https://img.shields.io/badge/cfn--lint-clean-green)]() [![license](https://img.shields.io/badge/license-MIT--0-blue)]()
 
 > **已在真实托管 Amazon MSK 集群上端到端验证**(Kafka 3.8.x,ZooKeeper,3 broker):部署+幂等、零误报、在真实 CloudWatch 指标上检测、**自主调用真实 `kafka:RebootBroker`**、真实恢复、cooldown 护栏——见 [`docs/POC-REPORT.md`](docs/POC-REPORT.md)。这次真机 POC 还顺带抓出并修复了两个会让检测"静默失效"的 bug。
 
@@ -40,8 +40,8 @@
 ## 快速开始
 
 ```bash
-git clone https://github.com/neosun100/msk-zombie-broker-autoheal.git
-cd msk-zombie-broker-autoheal
+git clone https://github.com/aws-samples/sample-msk-zombie-broker-autoheal.git
+cd sample-msk-zombie-broker-autoheal
 
 # 1) 先看它会创建什么——不对 AWS 做任何改动：
 ./deploy.sh --cluster-arn <你的 MSK 集群 ARN> --plan

@@ -5,7 +5,7 @@
 > **One command to detect and auto-recover "zombie brokers" on Amazon MSK (ZooKeeper mode).**
 > Closes the app-log volume blind spot that turns a single stalled broker into a multi-hour, *invisible* outage.
 
-[![ci](https://github.com/neosun100/msk-zombie-broker-autoheal/actions/workflows/ci.yml/badge.svg)](https://github.com/neosun100/msk-zombie-broker-autoheal/actions/workflows/ci.yml) [![tests](https://img.shields.io/badge/unit%2Bregression-15%2F15%20passing-brightgreen)]() [![validated](https://img.shields.io/badge/validated-live%20Amazon%20MSK%20%E2%9C%93-blue)](docs/POC-REPORT.md) [![cfn-lint](https://img.shields.io/badge/cfn--lint-clean-green)]() [![license](https://img.shields.io/badge/license-MIT--0-blue)]()
+[![ci](https://github.com/aws-samples/sample-msk-zombie-broker-autoheal/actions/workflows/ci.yml/badge.svg)](https://github.com/aws-samples/sample-msk-zombie-broker-autoheal/actions/workflows/ci.yml) [![tests](https://img.shields.io/badge/unit%2Bregression-15%2F15%20passing-brightgreen)]() [![validated](https://img.shields.io/badge/validated-live%20Amazon%20MSK%20%E2%9C%93-blue)](docs/POC-REPORT.md) [![cfn-lint](https://img.shields.io/badge/cfn--lint-clean-green)]() [![license](https://img.shields.io/badge/license-MIT--0-blue)]()
 
 > **Validated end-to-end on a real managed Amazon MSK cluster** (Kafka 3.8.x, ZooKeeper, 3 brokers):
 > deploy + idempotency, zero false positives, detection on real CloudWatch metrics, an
@@ -69,7 +69,7 @@ non-fencing) — purely from the client side, with no cluster migration.
 ## Quickstart
 
 ```bash
-git clone <this-repo> && cd msk-zombie-broker-autoheal
+git clone <this-repo> && cd sample-msk-zombie-broker-autoheal
 
 # 1) See exactly what it would create — no AWS changes:
 ./deploy.sh --cluster-arn <YOUR_MSK_CLUSTER_ARN> --plan
