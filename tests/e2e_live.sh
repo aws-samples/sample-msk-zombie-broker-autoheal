@@ -122,10 +122,20 @@ for i in $(seq 1 20); do
   [[ "$("${P[@]}" ssm describe-instance-information --filters "Key=InstanceIds,Values=$IID" --query 'InstanceInformationList[0].PingStatus' --output text 2>/dev/null)" == "Online" ]] && { ok "SSM online"; break; }
   sleep 15
 done
-ssm_run(){ # ssm_run "<cmds-json-array>" <timeout>
-  local cid; cid=$("${P[@]}" ssm send-command --instance-ids "$IID" --document-name AWS-RunShellScript \
+ssm_run(){ # ssm_run "<cmds-json-array>" <timeout-seconds> [initial-sleep]
+  local cid st; cid=$("${P[@]}" ssm send-command --instance-ids "$IID" --document-name AWS-RunShellScript \
     --parameters "commands=$1" --timeout-seconds "${2:-120}" --query Command.CommandId --output text)
-  sleep "${3:-12}"; "${P[@]}" ssm get-command-invocation --command-id "$cid" --instance-id "$IID" --query StandardOutputContent --output text 2>&1
+  sleep "${3:-8}"
+  # Poll until the command reaches a terminal state — do NOT return while it is still
+  # running, otherwise a later step can race a slow install (e.g. the Kafka download/extract)
+  # and hit "No such file or directory" on a binary that is not on disk yet.
+  for _ in $(seq 1 80); do
+    st=$("${P[@]}" ssm get-command-invocation --command-id "$cid" --instance-id "$IID" \
+         --query Status --output text 2>/dev/null)
+    [[ "$st" == "Success" || "$st" == "Failed" || "$st" == "Cancelled" || "$st" == "TimedOut" ]] && break
+    sleep 5
+  done
+  "${P[@]}" ssm get-command-invocation --command-id "$cid" --instance-id "$IID" --query StandardOutputContent --output text 2>&1
 }
 say "Install Kafka CLI (archive.apache.org — dlcdn drops old releases)"
 ssm_run '["dnf install -y java-17-amazon-corretto >/dev/null 2>&1","cd /opt && curl -s --max-time 200 -o k.tgz https://archive.apache.org/dist/kafka/3.8.1/kafka_2.13-3.8.1.tgz && tar xzf k.tgz && rm -f k.tgz && ln -sfn /opt/kafka_2.13-3.8.1 /opt/kafka","/opt/kafka/bin/kafka-topics.sh --version 2>&1 | tail -1"]' 260 80 | tail -2
