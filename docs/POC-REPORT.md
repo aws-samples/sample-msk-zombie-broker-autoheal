@@ -153,3 +153,31 @@ $ aws ec2 terminate-instances ...     # client EC2
 Combining the two tracks: the **mechanism** is proven on self-managed Kafka, and the
 **shipped tool's deploy + detection + autonomous recovery + guardrails** are proven on real
 managed MSK. That is the credible, end-to-end evidence base for releasing this to customers.
+
+---
+
+## Re-validation — 2026-06-30 (pre-release for aws-samples)
+
+Before the public release to `aws-samples`, the automated harness
+(`tests/e2e_live.sh`) was run again on a fresh real cluster
+(account `***`/us-east-1, `msk-e2e-cluster`, Kafka 3.8.x, ZooKeeper, 3 × kafka.t3.small).
+
+**Result: E2E PASSED.**
+
+| Phase | Outcome |
+|---|---|
+| Deploy (observe-only, window=1) | ✓ deployed |
+| Zero false positive (healthy) | ✓ `{"action":"none","brokers":3,"urp_positive":false}` |
+| Induce real outage (reboot broker 1) → detection | ✓ polls 5–7 `urp_positive:true`, poll 8 → `{"action":"dry_run_would_reboot","broker":1}` — **flagged the correct broker** |
+| Recovery | ✓ under-replicated partitions returned to `0` |
+| Teardown | ✓ complete |
+| Residual check (independent) | ✓ **zero**: MSK clusters `0`, EC2 `terminated`, security group `0`, IAM role `NoSuchEntity`, Lambda `0` |
+
+**Honest notes on this run:**
+- The Kafka client's `kafka-producer-perf-test.sh` was not found at the expected path on the
+  client EC2, so there was **no synthetic producer traffic** this run. Detection was still
+  validated via the **real reboot-induced under-replication** on broker 1, and the
+  zero-false-positive assertion held even without traffic.
+- This run deployed in **observe-only** mode, so the reboot decision was logged as
+  `dry_run_would_reboot` (detection validated). The **actual autonomous `kafka:RebootBroker`**
+  path was exercised in the earlier 0.2.0 live run (Section 5 above).
