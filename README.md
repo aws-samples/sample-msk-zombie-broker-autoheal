@@ -19,6 +19,24 @@
 
 ---
 
+## Contents
+
+- [In plain words](#in-plain-words-the-whole-idea-in-60-seconds)
+- [The problem](#the-problem-in-one-paragraph-the-technical-version)
+- [Quickstart](#quickstart)
+- [How it works](#how-it-works)
+- [What it creates](#what-it-creates)
+- [IaC alternative (AWS SAM)](#iac-alternative-aws-sam)
+- [L0 — client hardening](#l0--client-hardening-do-this-too-zero-migration)
+- [Structural cure (mid-term)](#structural-cure-mid-term)
+- [Limitations & honesty](#limitations--honesty)
+- [Repo layout](#repo-layout)
+- [Tests](#tests)
+- [Security](#security)
+- [License](#license)
+
+---
+
 ## In plain words (the whole idea in 60 seconds)
 
 - **What goes wrong.** Once in a while a single MSK broker's *log disk* freezes. The broker

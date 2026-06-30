@@ -52,6 +52,8 @@ can `ReplaceNode`; the tool escalates (L3) rather than rebooting in a loop.
 
 ## State machine (per broker)
 
+![Self-heal detection and recovery sequence](img/sequence-selfheal.png)
+
 ```
 healthy ──(BytesIn=0 & URP>0)──▶ zombie
 zombie  ──(guardrails pass)────▶ reboot ──▶ cooldown ──┬─(recovered)─▶ healthy (reset)

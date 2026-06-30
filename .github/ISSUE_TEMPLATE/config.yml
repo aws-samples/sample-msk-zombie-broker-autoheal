@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: AWS Support
+    url: https://aws.amazon.com/contact-us/
+    about: For account, billing, or production support, please use AWS Support rather than this issue tracker.

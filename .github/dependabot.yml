@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # This sample has no third-party runtime dependencies (boto3 is the Lambda-provided
+  # AWS SDK). We only track the GitHub Actions used by CI.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "chore(ci)"
